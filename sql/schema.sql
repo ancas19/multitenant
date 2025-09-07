@@ -44,9 +44,9 @@ VALUES
 
 INSERT INTO database_configuration (database_url, database_username, database_password, default_schema, company_id, created_by, updated_by, created_at, updated_at)
 VALUES
-    ('jdbc:postgresql://localhost:5432/tenant_default', '', '#', 'public', (select  p.id from company p where p.domain='default'), 'SYSTEM', NULL, NOW(), NOW()),
-    ('jdbc:postgresql://localhost:5432/tenant_company_one', '#', '#P4ssw0rd', 'public', (select  p.id from company p where p.domain='company_one'), 'SYSTEM', NULL, NOW(), NOW()),
-    ('jdbc:postgresql://localhost:5432/tenant_company_two', '#', '#P4ssw0rd', 'public', (select  p.id from company p where p.domain='company_two'), 'SYSTEM', NULL, NOW(), NOW());
+    ('jdbc:postgresql://localhost:5432/tenant_default', '', '#', 'public', (select  p.id from company p where p.domain='DEFAULT'), 'SYSTEM', NULL, NOW(), NOW()),
+    ('jdbc:postgresql://localhost:5432/tenant_company_one', '#', '#P4ssw0rd', 'public', (select  p.id from company p where p.domain='COMPANY_ONE'), 'SYSTEM', NULL, NOW(), NOW()),
+    ('jdbc:postgresql://localhost:5432/tenant_company_two', '#', '#P4ssw0rd', 'public', (select  p.id from company p where p.domain='COMPANY_TWO'), 'SYSTEM', NULL, NOW(), NOW());
 -- Schema database for users
 
 CREATE TABLE roles (
