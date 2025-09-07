@@ -125,8 +125,6 @@ erDiagram
     }
 ```
 
-ER Diagram (Image):
-![img.png](img.png)
 
 <details><summary>SQL Schema</summary>
 
