@@ -2,8 +2,10 @@
 
 A modular multi-tenant backend built with Spring Boot, Java 21, PostgreSQL, and JPA/Hibernate. It manages tenant (company) metadata and per-tenant database connection configuration plus user-related operations (sample Users API).
 
-Tenant Determination:
-Each incoming request is associated with a tenant (company) by extracting a unique identifier, such as the domain, from a request header (e.g., X-Tenant). A Spring MVC interceptor (TenantFilter) processes this identifier, looks up the corresponding company in the database, and sets the tenant context for the request lifecycle. This enables per-tenant data isolation and configuration throughout the application.
+# Tenant Determination:
+Each incoming request is associated with a tenant (company) by extracting a unique identifier, such as the domain, from a request header (e.g., X-Tenant). A Spring MVC interceptor (TenantFilter) processes this identifier, looks up the corresponding company in the database, and sets the tenant context for the request lifecycle. This enables per-tenant data isolation and configuration throughout the application..
+
+
 ---
 ## 1. Project Description
 
