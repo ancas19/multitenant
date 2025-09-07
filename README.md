@@ -27,9 +27,103 @@ Key Features:
 ## 2. Database Schema
 
 Entities:
-- company: Tenant master record.
-- database_configuration: Per-tenant database connection settings.
+- company: Tenant master record. Stores information about each company/tenant in the system, including their domain identifier and activation status.
+- database_configuration: Per-tenant database connection settings. Manages database connectivity for each tenant.
+- users: System user management. Stores user profiles with authentication and authorization details, including personal information and role-based access control.
+- roles: Role definitions for authorization. Defines available user roles and their descriptions for access control.
 
+Table Descriptions:
+
+### Company Table
+Central registry for all tenants in the system.
+- id: Unique identifier (UUID)
+- domain: Unique tenant identifier for routing (e.g., 'company-a')
+- company_name: Official company name
+- join_date: Date when company joined the platform
+- active: Activation status ('YES'/'NO')
+- Audit fields: created_by, updated_by, created_at, updated_at
+
+### Database Configuration Table
+Stores connection details for each tenant's database.
+- id: Unique identifier (UUID)
+- database_url: JDBC connection URL
+- database_username: Database user credentials
+- database_password: Encrypted database password
+- default_schema: Schema name (defaults to 'public')
+- company_id: Reference to parent company
+- Audit fields: created_by, updated_by, created_at, updated_at
+
+### Users Table
+Manages system users across all tenants.
+- id: Unique identifier (UUID)
+- first_name: User's first name
+- last_name: User's last name
+- email: Unique email address for authentication
+- password: Encrypted password hash
+- role_id: Reference to assigned role
+- status: Account status (active/inactive)
+- Audit fields: created_at, updated_at
+
+### Roles Table
+Defines available user roles for authorization.
+- id: Unique identifier (UUID)
+- name: Unique role name (e.g., 'ADMIN', 'USER')
+- description: Role purpose and permissions
+- Audit fields: created_at, updated_at
+
+Relationships:
+- One company has many database configurations (1:N)
+- One role can be assigned to many users (1:N)
+- Users must have valid email addresses (UNIQUE constraint)
+- Role deletion doesn't cascade to users (SET NULL)
+
+ER Diagram (Mermaid):
+```mermaid
+erDiagram
+    company ||--o{ database_configuration : has
+    roles ||--o{ users : has
+    company {
+        UUID id PK
+        string domain UK "Tenant identifier"
+        string company_name
+        date join_date
+        string active "YES/NO"
+        string created_by
+        string updated_by
+        timestamp created_at
+        timestamp updated_at
+    }
+    database_configuration {
+        UUID id PK
+        string database_url UK
+        string database_username
+        string database_password "Encrypted"
+        string default_schema "Default: public"
+        UUID company_id FK
+        string created_by
+        string updated_by
+        timestamp created_at
+        timestamp updated_at
+    }
+    users {
+        UUID id PK
+        string first_name "Personal info"
+        string last_name "Personal info"
+        string email UK "Authentication"
+        string password "Encrypted hash"
+        UUID role_id FK "Optional"
+        boolean status "Account active"
+        timestamp created_at
+        timestamp updated_at
+    }
+    roles {
+        UUID id PK
+        string name UK "e.g., ADMIN"
+        string description "Role details"
+        timestamp created_at
+        timestamp updated_at
+    }
+```
 
 ER Diagram (Image):
 ![img.png](img.png)
@@ -37,6 +131,7 @@ ER Diagram (Image):
 <details><summary>SQL Schema</summary>
 
 ```sql
+-- Core tenant management tables
 CREATE TABLE company (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     domain VARCHAR(255) NOT NULL UNIQUE,
@@ -70,6 +165,37 @@ CREATE TABLE database_configuration (
 
 CREATE INDEX idx_database_company_id ON database_configuration(company_id);
 CREATE INDEX idx_database_url ON database_configuration(database_url);
+
+-- User management and authentication tables
+CREATE TABLE roles (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name VARCHAR(50) NOT NULL UNIQUE,
+    description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE users (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    first_name VARCHAR(100) NOT NULL,
+    last_name VARCHAR(100) NOT NULL,
+    email VARCHAR(150) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    role_id UUID REFERENCES roles(id) ON DELETE SET NULL,
+    status BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Indexes for performance
+CREATE INDEX idx_users_email ON users(email);
+CREATE INDEX idx_users_role_id ON users(role_id);
+CREATE INDEX idx_roles_name ON roles(name);
+
+-- Initial role data
+INSERT INTO roles (name, description) VALUES
+('ADMIN', 'Full system access with all privileges'),
+('USER', 'Standard user with basic access rights');
 ```
 </details>
 
@@ -149,7 +275,3 @@ Base Path: `http://localhost:${APP_PORT}${CONTEXT_PATH}`
 ---
 ## 6. License
 Add a LICENSE file (e.g., MIT / Apache 2.0) and reference it here.
-
-
-
-
