@@ -1,0 +1,48 @@
+## Server Configuration
+springdoc:
+  swagger-ui:
+    path: /swagger-ui/index.html
+server:
+  port: ${APP_PORT}
+  servlet:
+    context-path: ${CONTEXT_PATH}
+spring:
+  application:
+    name: api-companies
+    version: 1.0
+    java: 21
+
+postgres:
+  driverClassName: ${POSTGRES_DRIVER}
+  url: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
+  user: ${POSTGRES_USER}
+  pass: ${POSTGRES_PASSWORD}
+  dialect: ${POSTGRES_DIALECT}
+  hibernate:
+    show_sql: ${SHOW_SQL}
+    hbm2ddl:
+      auto: ${HIBERNATE_DDL_AUTO}
+  readTimeout: ${POSTGRES_READ_TIMEOUT}
+  connectTimeout: ${POSTGRES_CONNECTION_TIMEOUT}
+  default_schema: ${POSTGRES_DEFAULT_SCHEMA}
+hibernate:
+  proc:
+    param_null_passing: true
+  cache:
+    use_second_level_cache: false
+    use_query_cache: false
+
+poolSize: ${POOL_SIZE:5}
+time_life_conection: ${TIME_LIFE_CONECTION:300}
+connectionTimeout: ${CONNECTION_TIMEOUT:10}
+
+
+logging:
+  level:
+    root: ${LOGGING_LEVEL}
+    co.com.cotrafa: ${LOGGING_LEVEL}
+    co.com.onnovacion: ${LOGGING_LEVEL}
+    org.springframework.web: ${LOGGING_LEVEL}
+    org.hibernate.dialect: ${LOGGING_LEVEL}
+    org.hibernate.SQL: ${LOGGING_LEVEL}
+    org.hibernate.type.descriptor.sql.BasicBinder: ${LOGGING_LEVEL}
