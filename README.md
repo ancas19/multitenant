@@ -28,32 +28,6 @@ Entities:
 - company: Tenant master record.
 - database_configuration: Per-tenant database connection settings.
 
-ER Diagram (Mermaid):
-```mermaid
-company {
-        UUID id PK
-        string domain UK
-        string company_name
-        date join_date
-        string active
-        string created_by
-        string updated_by
-        timestamp created_at
-        timestamp updated_at
-    }
-    database_configuration {
-        UUID id PK
-        string database_url UK
-        string database_username
-        string database_password
-        string default_schema
-        UUID company_id FK
-        string created_by
-        string updated_by
-        timestamp created_at
-        timestamp updated_at
-    }
-```
 
 ER Diagram (Image):
 ![img.png](img.png)
