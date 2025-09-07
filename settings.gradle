@@ -1,0 +1,15 @@
+rootProject.name = 'companies'
+
+
+include ':entrypoints'
+include ':models'
+include ':uses_cases'
+include ':clients'
+include ':postgres'
+
+
+project(':entrypoints').projectDir = file('infrastructure/entrypoints')
+project(':models').projectDir = file('domain/models')
+project(':uses_cases').projectDir = file('applications/uses_cases')
+project(':clients').projectDir = file('infrastructure/driven-adapters/clients')
+project(':postgres').projectDir = file('infrastructure/driven-adapters/postgres')
